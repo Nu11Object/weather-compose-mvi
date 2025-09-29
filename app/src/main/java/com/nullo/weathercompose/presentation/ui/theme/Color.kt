@@ -1,4 +1,4 @@
-package com.nullo.weathercompose.ui.theme
+package com.nullo.weathercompose.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
