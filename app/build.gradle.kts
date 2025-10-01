@@ -1,3 +1,4 @@
+import com.android.build.api.variant.BuildConfigField
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -48,6 +49,19 @@ android {
 kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_11)
+    }
+}
+
+androidComponents {
+    val key = property("apikey")?.toString() ?: error(
+        "You should add apikey into gradle.properties. See README.md for more details."
+    )
+
+    onVariants { variant ->
+        variant.buildConfigFields?.put(
+            "WEATHER_API_KEY",
+            BuildConfigField("String", "\"$key\"", "API key for weather service")
+        )
     }
 }
 
