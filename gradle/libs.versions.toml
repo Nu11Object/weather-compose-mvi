@@ -16,6 +16,7 @@ dagger = "2.57.2"
 glide = "5.0.5"
 glideCompose = "1.0.0-beta08"
 retrofit = "3.0.0"
+okHttpLoggingInterceptor = "5.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -46,6 +47,7 @@ glide-core = { group = "com.github.bumptech.glide", name = "glide", version.ref 
 glide-compose = { group = "com.github.bumptech.glide", name = "compose", version.ref = "glideCompose" }
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+okhttp-logger = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okHttpLoggingInterceptor" }
 
 
 [plugins]
@@ -58,5 +60,5 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 mvi = ["mvi-core", "mvi-main", "mvi-coroutines"]
 decompose = ["decompose-core", "decompose-compose"]
 room = ["room-runtime", "room-ktx"]
-retrofit = ["retrofit-core", "retrofit-gson"]
+retrofit = ["retrofit-core", "retrofit-gson", "okhttp-logger"]
 glide = ["glide-core", "glide-compose"]
