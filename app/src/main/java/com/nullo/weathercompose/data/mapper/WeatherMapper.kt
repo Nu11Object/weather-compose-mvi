@@ -8,6 +8,9 @@ import com.nullo.weathercompose.domain.entity.Weather
 import java.util.Calendar
 import java.util.Date
 
+private const val ICON_SIZE_SMALL = "64x64"
+private const val ICON_SIZE_LARGE = "128x128"
+
 private fun Long.secondsToMillis(): Long = this * 1000
 
 private fun Long.toCalendar() = Calendar.getInstance().apply {
@@ -16,7 +19,7 @@ private fun Long.toCalendar() = Calendar.getInstance().apply {
 
 private fun String.withHttpsPrefix() = "https:$this"
 
-private fun String.withLargeIcon() = replace(oldValue = "64x64", newValue = "128x128")
+private fun String.withLargeIcon() = replace(oldValue = ICON_SIZE_SMALL, newValue = ICON_SIZE_LARGE)
 
 fun CurrentWeatherDto.toEntity(): Weather = Weather(
     tempC = tempC,
@@ -29,12 +32,14 @@ fun WeatherResponseDto.toEntity(): Weather = currentWeather.toEntity()
 
 fun ForecastResponseDto.toEntity(): Forecast = Forecast(
     currentWeather = currentWeather.toEntity(),
-    upcoming = forecast.days.drop(1).map {
-        Weather(
-            tempC = it.day.tempC,
-            conditionText = it.day.condition.text,
-            conditionIconUrl = it.day.condition.iconUrl.withHttpsPrefix().withLargeIcon(),
-            date = it.timestamp.toCalendar()
-        )
-    }
+    upcoming = forecast.days
+        .drop(1) // Skip current day as it's already in currentWeather
+        .map {
+            Weather(
+                tempC = it.day.tempC,
+                conditionText = it.day.condition.text,
+                conditionIconUrl = it.day.condition.iconUrl.withHttpsPrefix().withLargeIcon(),
+                date = it.timestamp.toCalendar()
+            )
+        }
 )

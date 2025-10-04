@@ -1,7 +1,6 @@
 package com.nullo.weathercompose.data.mapper
 
 import com.nullo.weathercompose.data.local.model.CityDbModel
-import com.nullo.weathercompose.data.network.dto.CityResponseDto
 import com.nullo.weathercompose.domain.entity.City
 
 fun City.toDbModel(): CityDbModel = CityDbModel(id, name, country)
