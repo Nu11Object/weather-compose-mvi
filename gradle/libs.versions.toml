@@ -17,6 +17,7 @@ glide = "5.0.5"
 glideCompose = "1.0.0-beta08"
 retrofit = "3.0.0"
 okHttpLoggingInterceptor = "5.1.0"
+kotlinSerialization = "2.2.20"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +56,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
 
 [bundles]
 mvi = ["mvi-core", "mvi-main", "mvi-coroutines"]
