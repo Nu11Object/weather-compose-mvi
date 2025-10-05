@@ -9,17 +9,19 @@ import com.nullo.weathercompose.presentation.extensions.componentScope
 import com.nullo.weathercompose.presentation.favourite.FavouriteStore.Intent
 import com.nullo.weathercompose.presentation.favourite.FavouriteStore.Label
 import com.nullo.weathercompose.presentation.favourite.FavouriteStore.State
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class DefaultFavouriteComponent @Inject constructor(
+class DefaultFavouriteComponent @AssistedInject constructor(
     private val favouriteStoreFactory: FavouriteStoreFactory,
-    private val onAddFavouriteClicked: () -> Unit,
-    private val onCityItemClicked: (City) -> Unit,
-    private val onSearchClicked: () -> Unit,
-    componentContext: ComponentContext,
+    @Assisted(KEY_ON_ADD_FAVOURITE) private val onAddFavouriteClicked: () -> Unit,
+    @Assisted(KEY_ON_CITY_ITEM) private val onCityItemClicked: (City) -> Unit,
+    @Assisted(KEY_ON_SEARCH) private val onSearchClicked: () -> Unit,
+    @Assisted(KEY_COMPONENT_CONTEXT) componentContext: ComponentContext,
 ) : FavouriteComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore { favouriteStoreFactory.create() }
@@ -51,5 +53,24 @@ class DefaultFavouriteComponent @Inject constructor(
 
     override fun onCityItemClick(city: City) {
         store.accept(Intent.CityItemClick(city))
+    }
+
+    @AssistedFactory
+    interface Factory {
+
+        fun create(
+            @Assisted(KEY_ON_ADD_FAVOURITE) onAddFavouriteClicked: () -> Unit,
+            @Assisted(KEY_ON_CITY_ITEM) onCityItemClicked: (City) -> Unit,
+            @Assisted(KEY_ON_SEARCH) onSearchClicked: () -> Unit,
+            @Assisted(KEY_COMPONENT_CONTEXT) componentContext: ComponentContext,
+        ): DefaultFavouriteComponent
+    }
+
+    companion object {
+
+        private const val KEY_ON_ADD_FAVOURITE = "onAddFavouriteClicked"
+        private const val KEY_ON_CITY_ITEM = "onCityItemClicked"
+        private const val KEY_ON_SEARCH = "onSearchClicked"
+        private const val KEY_COMPONENT_CONTEXT = "componentContext"
     }
 }

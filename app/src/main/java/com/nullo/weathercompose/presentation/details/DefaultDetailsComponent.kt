@@ -6,16 +6,18 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.nullo.weathercompose.domain.entity.City
 import com.nullo.weathercompose.presentation.extensions.componentScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class DefaultDetailsComponent @Inject constructor(
-    private val city: City,
+class DefaultDetailsComponent @AssistedInject constructor(
     private val detailsStoreFactory: DetailsStoreFactory,
-    private val onBackClicked: () -> Unit,
-    componentContext: ComponentContext,
+    @Assisted(KEY_CITY) private val city: City,
+    @Assisted(KEY_ON_BACK_CLICKED) private val onBackClicked: () -> Unit,
+    @Assisted(KEY_COMPONENT_CONTEXT) componentContext: ComponentContext,
 ) : DetailsComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore { detailsStoreFactory.create(city) }
@@ -41,5 +43,22 @@ class DefaultDetailsComponent @Inject constructor(
 
     override fun onChangeFavouriteStatusClick() {
         store.accept(DetailsStore.Intent.ClickChangeFavouriteStatus)
+    }
+
+    @AssistedFactory
+    interface Factory {
+
+        fun create(
+            @Assisted(KEY_CITY) city: City,
+            @Assisted(KEY_ON_BACK_CLICKED) onBackClicked: () -> Unit,
+            @Assisted(KEY_COMPONENT_CONTEXT) componentContext: ComponentContext,
+        ): DefaultDetailsComponent
+    }
+
+    companion object {
+
+        private const val KEY_CITY = "city"
+        private const val KEY_ON_BACK_CLICKED = "onBackClicked"
+        private const val KEY_COMPONENT_CONTEXT = "componentContext"
     }
 }
