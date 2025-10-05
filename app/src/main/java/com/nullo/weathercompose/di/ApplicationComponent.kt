@@ -14,6 +14,8 @@ import dagger.Component
 @ApplicationScope
 interface ApplicationComponent {
 
+    fun inject(mainActivity: MainActivity)
+
     @Component.Factory
     interface Factory {
 

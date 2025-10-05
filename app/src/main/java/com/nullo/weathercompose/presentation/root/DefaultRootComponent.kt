@@ -13,14 +13,16 @@ import com.nullo.weathercompose.presentation.details.DefaultDetailsComponent
 import com.nullo.weathercompose.presentation.favourite.DefaultFavouriteComponent
 import com.nullo.weathercompose.presentation.search.DefaultSearchComponent
 import com.nullo.weathercompose.presentation.search.OpenReason
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.serialization.Serializable
-import javax.inject.Inject
 
-class DefaultRootComponent @Inject constructor(
+class DefaultRootComponent @AssistedInject constructor(
     private val defaultDetailsComponentFactory: DefaultDetailsComponent.Factory,
     private val defaultFavouriteComponentFactory: DefaultFavouriteComponent.Factory,
     private val defaultSearchComponentFactory: DefaultSearchComponent.Factory,
-    componentContext: ComponentContext,
+    @Assisted(KEY_COMPONENT_CONTEXT) componentContext: ComponentContext,
 ) : RootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -96,5 +98,18 @@ class DefaultRootComponent @Inject constructor(
 
         @Serializable
         data class Search(val openReason: OpenReason) : Config
+    }
+
+    @AssistedFactory
+    interface Factory {
+
+        fun create(
+            @Assisted(KEY_COMPONENT_CONTEXT) componentContext: ComponentContext,
+        ): DefaultRootComponent
+    }
+
+    companion object {
+
+        private const val KEY_COMPONENT_CONTEXT = "componentContext"
     }
 }
