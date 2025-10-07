@@ -9,4 +9,14 @@
     <string name="error_internet">Проверьте интернет соединение</string>
     <string name="cd_search_city">Найти город</string>
     <string name="error_empty_search_result">Ничего не найдено</string>
+    <string name="feels_like">Ощущается</string>
+    <string name="wind">Ветер</string>
+    <string name="pressure">Давление</string>
+    <string name="humidity">Влажность</string>
+    <string name="precipitation">Осадки</string>
+    <string name="uv_index">UV-индекс</string>
+    <string name="template_wind">%.0f км/ч %s</string>
+    <string name="template_pressure">%.0f мм</string>
+    <string name="template_precipitation">%.0f мм</string>
+    <string name="powered_by_api">основано на weatherapi.com</string>
 </resources>

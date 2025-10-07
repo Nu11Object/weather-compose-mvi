@@ -18,5 +18,7 @@ data class ForecastDayDto(
 
 data class DayWeatherDto(
     @SerializedName("avgtemp_c") val tempC: Float,
+    @SerializedName("mintemp_c") val minTempC: Float,
+    @SerializedName("maxtemp_c") val maxTempC: Float,
     @SerializedName("condition") val condition: ConditionDto,
 )

@@ -3,14 +3,19 @@ package com.nullo.weathercompose.presentation.details
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.WifiOff
@@ -21,6 +26,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -39,9 +46,11 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.nullo.weathercompose.R
+import com.nullo.weathercompose.domain.entity.UpcomingItem
 import com.nullo.weathercompose.domain.entity.Weather
 import com.nullo.weathercompose.presentation.extensions.formatToFullDate
 import com.nullo.weathercompose.presentation.extensions.formatToFullWeek
+import com.nullo.weathercompose.presentation.extensions.toDetailsList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -189,54 +198,153 @@ private fun LoadingContent(modifier: Modifier = Modifier) {
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun ForecastContent(
     modifier: Modifier = Modifier,
     currentWeather: Weather,
-    upcoming: List<Weather>,
+    upcoming: List<UpcomingItem>,
 ) {
     Column(
         modifier = modifier,
     ) {
+        Spacer(modifier = Modifier.weight(1f))
+        TempAndConditionSection(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            currentWeather = currentWeather
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        UpcomingSection(upcoming = upcoming)
+        Spacer(modifier = Modifier.height(8.dp))
+        DetailsSection(currentWeather = currentWeather)
         Spacer(modifier = Modifier.height(24.dp))
         Text(
-            text = currentWeather.conditionText,
-            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(horizontal = 16.dp),
+            text = stringResource(R.string.powered_by_api),
+            style = MaterialTheme.typography.bodySmall,
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        Spacer(modifier = Modifier.weight(1f))
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun TempAndConditionSection(
+    modifier: Modifier = Modifier,
+    currentWeather: Weather,
+) {
+    Row(
+        modifier = modifier.height(IntrinsicSize.Min),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column {
             Text(
-                text = stringResource(R.string.template_temp_c, currentWeather.tempC),
+                text = currentWeather.conditionText,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            Text(
+                text = stringResource(R.string.template_temperature, currentWeather.tempC),
                 style = MaterialTheme.typography.bodyLarge.copy(fontSize = 42.sp),
                 fontWeight = FontWeight.Medium
             )
-            Spacer(modifier = Modifier.width(6.dp))
-            GlideImage(
-                modifier = Modifier.size(32.dp),
-                model = currentWeather.conditionIconUrl,
-                contentDescription = null,
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        GlideImage(
+            modifier = Modifier.fillMaxHeight(),
+            model = currentWeather.conditionIconUrl,
+            contentDescription = null,
+        )
+    }
+}
+
+@Composable
+fun UpcomingSection(
+    modifier: Modifier = Modifier,
+    upcoming: List<UpcomingItem>,
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = MaterialTheme.shapes.medium,
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = stringResource(R.string.title_forecast),
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            upcoming.forEach {
+                ForecastListItem(upcomingItem = it)
+            }
+        }
+    }
+}
+
+@Composable
+fun DetailsSection(
+    modifier: Modifier = Modifier,
+    currentWeather: Weather,
+) {
+    val details = currentWeather.toDetailsList()
+
+    LazyVerticalGrid(
+        modifier = modifier,
+        columns = GridCells.Fixed(2),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+
+        items(
+            items = details,
+            key = { it.nameStringRes }
+        ) { detail ->
+            DetailsItem(
+                name = stringResource(detail.nameStringRes),
+                value = detail.value,
+                icon = detail.icon
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            shape = MaterialTheme.shapes.medium,
+    }
+}
+
+@Composable
+fun DetailsItem(
+    modifier: Modifier = Modifier,
+    name: String,
+    value: String,
+    icon: ImageVector,
+) {
+    Card(
+        modifier = modifier.fillMaxSize(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = MaterialTheme.shapes.large,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                modifier = Modifier.padding(10.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
+            Icon(
+                imageVector = icon,
+                tint = MaterialTheme.colorScheme.onSurface,
+                contentDescription = null,
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Column {
                 Text(
-                    text = stringResource(R.string.title_forecast),
+                    text = name,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Medium
                 )
-                upcoming.forEach {
-                    ForecastItem(weather = it)
-                }
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
             }
         }
     }
@@ -244,9 +352,9 @@ private fun ForecastContent(
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun ForecastItem(
+private fun ForecastListItem(
     modifier: Modifier = Modifier,
-    weather: Weather,
+    upcomingItem: UpcomingItem,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -254,17 +362,26 @@ private fun ForecastItem(
     ) {
         GlideImage(
             modifier = Modifier.size(24.dp),
-            model = weather.conditionIconUrl,
+            model = upcomingItem.conditionIconUrl,
             contentDescription = null,
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
-            text = weather.date.formatToFullWeek(),
-            style = MaterialTheme.typography.bodyLarge,
+            text = upcomingItem.date.formatToFullWeek(),
+            style = MaterialTheme.typography.titleMedium,
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = stringResource(R.string.template_temp_c, weather.tempC),
+            text = stringResource(R.string.template_temperature, upcomingItem.minTempC),
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Spacer(modifier = Modifier.width(6.dp))
+        HorizontalDivider(
+            modifier = Modifier.width(100.dp),
+        )
+        Spacer(modifier = Modifier.width(6.dp))
+        Text(
+            text = stringResource(R.string.template_temperature, upcomingItem.maxTempC),
             style = MaterialTheme.typography.bodyLarge,
         )
     }

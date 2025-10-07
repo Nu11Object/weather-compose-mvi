@@ -139,7 +139,7 @@ private fun CityCard(
                         modifier = Modifier
                             .align(Alignment.BottomStart)
                             .padding(bottom = 24.dp),
-                        text = stringResource(R.string.template_temp_c, weatherState.tempC),
+                        text = stringResource(R.string.template_temperature, weatherState.tempC),
                         style = MaterialTheme.typography.bodyLarge.copy(fontSize = 42.sp),
                     )
                 }

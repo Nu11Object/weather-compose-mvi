@@ -4,6 +4,7 @@ import com.nullo.weathercompose.data.network.dto.CurrentWeatherDto
 import com.nullo.weathercompose.data.network.dto.ForecastResponseDto
 import com.nullo.weathercompose.data.network.dto.WeatherResponseDto
 import com.nullo.weathercompose.domain.entity.Forecast
+import com.nullo.weathercompose.domain.entity.UpcomingItem
 import com.nullo.weathercompose.domain.entity.Weather
 import java.util.Calendar
 import java.util.Date
@@ -23,6 +24,13 @@ private fun String.withLargeIcon() = replace(oldValue = ICON_SIZE_SMALL, newValu
 
 fun CurrentWeatherDto.toEntity(): Weather = Weather(
     tempC = tempC,
+    tempFeelsLikeC = tempFeelsLikeC,
+    windKph = windKph,
+    windDirection = windDirection,
+    pressureInch = pressureInch,
+    humidity = humidity,
+    uvIndex = uvIndex,
+    precipitationMm = precipitationMm,
     conditionText = condition.text,
     conditionIconUrl = condition.iconUrl.withHttpsPrefix().withLargeIcon(),
     date = timestamp.toCalendar()
@@ -35,9 +43,9 @@ fun ForecastResponseDto.toEntity(): Forecast = Forecast(
     upcoming = forecast.days
         .drop(1) // Skip current day as it's already in currentWeather
         .map {
-            Weather(
-                tempC = it.day.tempC,
-                conditionText = it.day.condition.text,
+            UpcomingItem(
+                minTempC = it.day.minTempC,
+                maxTempC = it.day.maxTempC,
                 conditionIconUrl = it.day.condition.iconUrl.withHttpsPrefix().withLargeIcon(),
                 date = it.timestamp.toCalendar()
             )
