@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">WeatherCompose</string>
+    <string name="template_temp_c">%.0f°C</string>
+    <string name="button_add_city">Add new city</string>
+    <string name="hint_search_bar">Search city…</string>
+    <string name="cd_navigate_back">Navigate back</string>
+    <string name="title_forecast">Forecast for the coming days</string>
+    <string name="cd_remove_city_from_favourites">Remove city from favourites</string>
+    <string name="cd_add_city_to_favourites">Add city to favourites</string>
+    <string name="error_internet">Check internet connection</string>
+    <string name="cd_search_city">Search city</string>
+    <string name="error_empty_search_result">Nothing was found</string>
 </resources>
