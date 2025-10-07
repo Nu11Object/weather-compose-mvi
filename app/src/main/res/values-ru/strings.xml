@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="button_add_city">Добавить город</string>
+    <string name="hint_search_bar">Поиск города…</string>
+    <string name="cd_navigate_back">Вернуться назад</string>
+    <string name="title_forecast">Прогноз на ближайшие дни</string>
+    <string name="cd_remove_city_from_favourites">Удалить город из избранных</string>
+    <string name="cd_add_city_to_favourites">Добавить город в избранные</string>
+    <string name="error_internet">Проверьте интернет соединение</string>
+    <string name="cd_search_city">Найти город</string>
+    <string name="error_empty_search_result">Ничего не найдено</string>
+</resources>
