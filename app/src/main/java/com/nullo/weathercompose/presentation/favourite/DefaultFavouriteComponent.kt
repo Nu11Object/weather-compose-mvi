@@ -32,9 +32,17 @@ class DefaultFavouriteComponent @AssistedInject constructor(
         scope.launch {
             store.labels.collect {
                 when (it) {
-                    Label.AddFavouriteClicked -> ::onAddFavouriteClicked
-                    is Label.CityItemClicked -> ::onCityItemClicked
-                    Label.SearchClicked -> ::onSearchClicked
+                    Label.AddFavouriteClicked -> {
+                        onAddFavouriteClicked()
+                    }
+
+                    Label.SearchClicked -> {
+                        onSearchClicked()
+                    }
+
+                    is Label.CityItemClicked -> {
+                        onCityItemClicked(it.city)
+                    }
                 }
             }
         }

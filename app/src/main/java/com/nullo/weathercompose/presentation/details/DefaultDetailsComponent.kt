@@ -28,7 +28,9 @@ class DefaultDetailsComponent @AssistedInject constructor(
         scope.launch {
             store.labels.collect {
                 when (it) {
-                    DetailsStore.Label.BackClicked -> ::onBackClicked
+                    DetailsStore.Label.BackClicked -> {
+                        onBackClicked()
+                    }
                 }
             }
         }

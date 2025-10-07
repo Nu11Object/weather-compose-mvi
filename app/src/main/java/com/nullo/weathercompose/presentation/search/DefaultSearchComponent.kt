@@ -30,9 +30,17 @@ class DefaultSearchComponent @AssistedInject constructor(
         scope.launch {
             store.labels.collect {
                 when (it) {
-                    SearchStore.Label.BackClicked -> ::onBackClicked
-                    SearchStore.Label.SavedToFavourite -> ::onCitySavedToFavourite
-                    is SearchStore.Label.SelectedForForecast -> ::onCitySelectedForForecast
+                    SearchStore.Label.BackClicked -> {
+                        onBackClicked()
+                    }
+
+                    SearchStore.Label.SavedToFavourite -> {
+                        onCitySavedToFavourite()
+                    }
+
+                    is SearchStore.Label.SelectedForForecast -> {
+                        onCitySelectedForForecast(it.city)
+                    }
                 }
             }
         }
