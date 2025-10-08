@@ -205,23 +205,23 @@ private fun SearchResultsContent(
     ) {
 
         items(items = cities, key = { it.id }) {
-            City(
+            CityItem(
                 modifier = Modifier.fillMaxWidth(),
                 city = it,
-                onCityClick = { onCityClick(it) }
+                onCityClick = onCityClick
             )
         }
     }
 }
 
 @Composable
-private fun City(
+private fun CityItem(
     modifier: Modifier = Modifier,
     city: City,
-    onCityClick: () -> Unit,
+    onCityClick: (City) -> Unit,
 ) {
     Card(
-        modifier = modifier.clickable { onCityClick() },
+        modifier = modifier.clickable { onCityClick(city) },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         shape = MaterialTheme.shapes.medium,
     ) {

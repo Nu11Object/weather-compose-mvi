@@ -23,7 +23,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material.icons.rounded.AddLocation
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.icons.rounded.WifiOff
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -37,13 +36,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.nullo.weathercompose.R
+import com.nullo.weathercompose.domain.entity.City
 
 @Composable
 fun FavouriteContent(component: FavouriteComponent) {
@@ -79,9 +79,7 @@ fun FavouriteContent(component: FavouriteComponent) {
                 ) {
                     CityCard(
                         cityItem = it,
-                        onClick = {
-                            component.onCityItemClick(it.city)
-                        }
+                        onClick = component::onCityItemClick
                     )
                 }
 
@@ -99,63 +97,67 @@ fun FavouriteContent(component: FavouriteComponent) {
 @Composable
 private fun CityCard(
     cityItem: FavouriteStore.State.CityItem,
-    onClick: () -> Unit,
+    onClick: (City) -> Unit,
 ) {
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .clickable { onClick() },
+            .clickable { onClick(cityItem.city) },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         shape = MaterialTheme.shapes.large,
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .sizeIn(minHeight = 200.dp)
                 .padding(16.dp),
         ) {
-            when (val weatherState = cityItem.weatherState) {
-                FavouriteStore.State.WeatherState.Initial -> {}
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                contentAlignment = Alignment.TopEnd
+            ) {
+                when (val weatherState = cityItem.weatherState) {
+                    FavouriteStore.State.WeatherState.Initial -> {}
 
-                FavouriteStore.State.WeatherState.Error -> {
-                    Icon(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .size(32.dp),
-                        imageVector = Icons.Default.WifiOff,
-                        contentDescription = null,
-                    )
-                }
-
-                is FavouriteStore.State.WeatherState.Loaded -> {
-                    GlideImage(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .size(48.dp),
-                        model = weatherState.conditionIconUrl,
-                        contentDescription = null,
-                    )
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(bottom = 24.dp),
-                        text = stringResource(R.string.template_temperature, weatherState.tempC),
-                        style = MaterialTheme.typography.bodyLarge.copy(fontSize = 42.sp),
-                    )
-                }
-
-                FavouriteStore.State.WeatherState.Loading -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center),
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
+                    FavouriteStore.State.WeatherState.Error -> {
+                        Icon(
+                            modifier = Modifier.size(32.dp),
+                            imageVector = Icons.Default.WifiOff,
+                            contentDescription = null,
+                        )
+                    }
+                    is FavouriteStore.State.WeatherState.Loaded -> {
+                        GlideImage(
+                            modifier = Modifier.size(48.dp),
+                            model = weatherState.conditionIconUrl,
+                            contentDescription = null,
+                        )
+                    }
+                    FavouriteStore.State.WeatherState.Loading -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(32.dp),
+                            color = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
                 }
             }
-
+            Spacer(modifier = Modifier.weight(1f))
+            if (cityItem.weatherState is FavouriteStore.State.WeatherState.Loaded) {
+                Text(
+                    text = stringResource(
+                        R.string.template_temperature,
+                        cityItem.weatherState.tempC
+                    ),
+                    style = MaterialTheme.typography.bodyLarge.copy(fontSize = 42.sp),
+                )
+            }
             Text(
-                modifier = Modifier.align(Alignment.BottomStart),
                 text = cityItem.city.name,
                 style = MaterialTheme.typography.titleMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }

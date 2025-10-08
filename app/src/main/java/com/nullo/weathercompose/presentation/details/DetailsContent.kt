@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -372,17 +373,19 @@ private fun ForecastListItem(
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
+            modifier = Modifier.width(42.dp),
             text = stringResource(R.string.template_temperature, upcomingItem.minTempC),
             style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
         )
-        Spacer(modifier = Modifier.width(6.dp))
         HorizontalDivider(
             modifier = Modifier.width(100.dp),
         )
-        Spacer(modifier = Modifier.width(6.dp))
         Text(
+            modifier = Modifier.width(42.dp),
             text = stringResource(R.string.template_temperature, upcomingItem.maxTempC),
             style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center,
         )
     }
 }
