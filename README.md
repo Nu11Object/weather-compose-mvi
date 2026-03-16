@@ -44,7 +44,7 @@
 1. Clone the repository:
 
     ```bash
-    git clone git@github.com:Nu11Object/weather-compose.git
+    git clone git@github.com:Nu11Object/weather-compose-mvi.git
     ```
 2. Create your own Weather API key:
 
